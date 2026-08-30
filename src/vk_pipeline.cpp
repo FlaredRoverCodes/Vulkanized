@@ -5,16 +5,20 @@
 
 namespace vk_engine
 {
-    Vulkan_Engine_Pipeline::Vulkan_Engine_Pipeline(const std::string &vertexFilePath, const std::string &fragmentFilePath)
+    Vulkan_Engine_Pipeline::Vulkan_Engine_Pipeline(
+        const Vulkan_Engine_Device &device,
+        const std::string &vertexFilePath,
+        const std::string &fragmentFilePath,
+        const Pipeline_Config_Info &configInfo)
     {
-        createGraphicsPipeline(vertexFilePath, fragmentFilePath);
+        createGraphicsPipeline(device, vertexFilePath, fragmentFilePath, configInfo);
     }
 
     std::vector<char> Vulkan_Engine_Pipeline::readFile(const std::string &filePath)
     {
         std::ifstream file(filePath, std::ios::ate | std::ios::binary);
 
-        if(!file.is_open())
+        if (!file.is_open())
         {
             throw std::runtime_error("failed to open file: " + filePath);
         }
@@ -29,7 +33,11 @@ namespace vk_engine
         return buffer;
     }
 
-    void Vulkan_Engine_Pipeline::createGraphicsPipeline(const std::string &vertexFilePath, const std::string &fragmentFilePath)
+    void Vulkan_Engine_Pipeline::createGraphicsPipeline(
+        const Vulkan_Engine_Device &device,
+        const std::string &vertexFilePath,
+        const std::string &fragmentFilePath,
+        const Pipeline_Config_Info &configInfo)
     {
         auto vertexCode = readFile(vertexFilePath);
         auto fragmentCode = readFile(fragmentFilePath);
